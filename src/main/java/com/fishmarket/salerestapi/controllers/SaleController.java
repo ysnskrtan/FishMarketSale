@@ -14,6 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+
 import com.fishmarket.salerestapi.models.Sale;
 import com.fishmarket.salerestapi.repositories.SaleRepository;
 
@@ -32,6 +40,36 @@ public class SaleController {
 	
 	@PostMapping("/sales")
 	public Sale createUser(@RequestBody Sale sale) {
+		if(sale.isNewLocation()) {
+			String paylod = "{"+ 
+					"\"cityName:\":\""+sale.getLocationName()+
+					"}";
+			StringEntity entity = new StringEntity(payload,
+	                ContentType.APPLICATION_FORM_URLENCODED);
+
+	        HttpClient httpClient = HttpClientBuilder.create().build();
+	        HttpPost request = new HttpPost("http://167.99.44.151:8083/api/v1/cities");
+	        request.setEntity(entity);
+
+	        HttpResponse response = httpClient.execute(request);
+	        System.out.println(response.getStatusLine().getStatusCode());
+		}
+		
+		if(sale.isNewFish()) {
+			String paylod = "{"+ 
+					"\"fishName:\":\""+sale.getFishName()+
+					"}";
+			StringEntity entity = new StringEntity(payload,
+	                ContentType.APPLICATION_FORM_URLENCODED);
+
+	        HttpClient httpClient = HttpClientBuilder.create().build();
+	        HttpPost request = new HttpPost("http://167.99.44.151:8084/api/v1/fishes");
+	        request.setEntity(entity);
+
+	        HttpResponse response = httpClient.execute(request);
+	        System.out.println(response.getStatusLine().getStatusCode());
+		}
+		
 		return saleRepository.save(sale);
 	}
 	
@@ -49,6 +87,8 @@ public class SaleController {
                     saleData.setLocationName(sale.getLocationName());
                     saleData.setLocationId(sale.getLocationId());
                     saleData.setUserId(sale.getUserId());
+                    saleData.setFishId(sale.getFishId());
+                    saleData.setFishName(sale.getFishName());
                     Sale updatedUser = saleRepository.save(saleData);
                     return ResponseEntity.ok().body(updatedUser);
                 }).orElse(ResponseEntity.notFound().build());

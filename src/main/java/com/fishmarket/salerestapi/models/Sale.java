@@ -13,6 +13,9 @@ public class Sale {
 	String locationName;
 	String userId;
 	String price;
+	String fishId;
+	String fishName;
+	boolean isNewFish;
 	boolean isNewLocation;
 	
 	public Sale() {
@@ -81,6 +84,30 @@ public class Sale {
 
 	public void setLocationName(String locationName) {
 		this.locationName = locationName;
+	}
+
+	public String getFishId() {
+		return fishId;
+	}
+
+	public void setFishId(String fishId) {
+		this.fishId = fishId;
+	}
+
+	public String getFishName() {
+		return fishName;
+	}
+
+	public void setFishName(String fishName) {
+		this.fishName = fishName;
+	}
+
+	public boolean isNewFish() {
+		return isNewFish;
+	}
+
+	public void setNewFish(boolean isNewFish) {
+		this.isNewFish = isNewFish;
 	}
 
 }
